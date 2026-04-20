@@ -88,74 +88,76 @@
 
 <script>
 
-    async function login(){
-        let res = await fetch("http://localhost:8080/auth/login", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                username: username.value,
-                password: password.value
-            })
-        });
+const BASE_URL = "https://handmade-shop-backend-deployment-1.onrender.com";
 
-        let text = await res.text();
+async function login(){
+    let res = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: username.value,
+            password: password.value
+        })
+    });
 
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            alert(text);   // fallback for plain string errors
-            return;
-        }
+    let text = await res.text();
 
-        alert(data.message);
-
-        if(data.message === "Login Successful"){
-
-            localStorage.setItem("username", data.username);
-            localStorage.setItem("role", data.role);
-
-            if(data.role==="ADMIN"){
-                window.location.href = "admin/admin-dashboard.html";
-            } else {
-                window.location.href = "home.html";
-            }
-        }
+    let data;
+    try {
+        data = JSON.parse(text);
+    } catch (e) {
+        alert(text);
+        return;
     }
 
-    async function register(){
-        let res = await fetch("http://localhost:8080/auth/register", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                username: username.value,
-                password: password.value
-            })
-        });
+    alert(data.message);
 
-        alert(await res.text());
-    }
+    if(data.message === "Login Successful"){
 
-    async function forgot(){
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("role", data.role);
 
-        let newPass = prompt("Enter new password");
-
-        if(newPass === null || newPass.trim() === ""){
-            alert("Password change cancelled");
-            return;
+        if(data.role==="ADMIN"){
+            window.location.href = "admin/admin-dashboard.html";
+        } else {
+            window.location.href = "home.html";
         }
-
-        let res = await fetch("http://localhost:8080/auth/forgot", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                username: username.value,
-                newPassword: newPass
-            })
-        });
-
-        alert(await res.text());
     }
+}
+
+async function register(){
+    let res = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: username.value,
+            password: password.value
+        })
+    });
+
+    alert(await res.text());
+}
+
+async function forgot(){
+
+    let newPass = prompt("Enter new password");
+
+    if(newPass === null || newPass.trim() === ""){
+        alert("Password change cancelled");
+        return;
+    }
+
+    let res = await fetch(`${BASE_URL}/auth/forgot`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: username.value,
+            newPassword: newPass
+        })
+    });
+
+    alert(await res.text());
+}
 
 </script>
 
