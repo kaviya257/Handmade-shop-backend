@@ -201,7 +201,7 @@ const BASE_URL = "https://handmade-shop-backend-deployment-1.onrender.com";
 let cart = [];
 let products = [];
 
-// Load products
+
 async function loadProducts(){
   try {
     const res = await fetch(`${BASE_URL}/products`);
@@ -212,7 +212,7 @@ async function loadProducts(){
   }
 }
 
-// Render UI
+
 function render(data){
   const track = document.getElementById("productTrack");
 
@@ -227,7 +227,7 @@ function render(data){
   `).join('');
 }
 
-// Cart functions
+
 function add(id){
   let p = products.find(x => x.id === id);
   let c = cart.find(x => x.id === id);
@@ -259,7 +259,7 @@ function updateCart(){
   document.getElementById("cartTotal").innerText = "Total: ₹ " + total;
 }
 
-// Buy
+
 async function buyNow(){
   const username = localStorage.getItem("username");
 
@@ -302,7 +302,6 @@ async function buyNow(){
   }
 }
 
-// UI helpers
 function move(d){
   document.getElementById("productTrack")
     .scrollBy({left: d*270, behavior:'smooth'});
@@ -323,7 +322,7 @@ function logout(){
   window.location = "login.html";
 }
 
-// Start
+
 loadProducts();
 
 </script>
