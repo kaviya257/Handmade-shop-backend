@@ -3,27 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <title>Handmade Shop</title>
+
   <style>
-    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #ffecd2, #fcb69f); min-height: 100vh; overflow-x: hidden; }
-    .navbar { background: #2d3436; color: white; padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; }
-    .nav-links button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 15px; margin-left: 10px; border-radius: 6px; cursor: pointer; }
-    .search-area { text-align: center; margin: 40px 0; }
-    #searchBox { padding: 12px 20px; width: 400px; border-radius: 25px 0 0 25px; border: none; outline: none; }
-    .search-btn { padding: 12px 25px; border-radius: 0 25px 25px 0; border: none; background: #2d3436; color: white; cursor: pointer; }
-    .main-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; position: relative; }
-    .viewport { width: 100%; overflow: hidden; padding: 20px 5px; }
-    .product-track { display: flex; gap: 20px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; padding: 10px; }
-    .product-track::-webkit-scrollbar { display: none; }
-    .card { flex: 0 0 250px; background: white; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-    .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
-    .card p { color: #e67e22; font-weight: bold; }
-    .card button { background: #2d3436; color: white; border: none; width: 35px; height: 35px; border-radius: 6px; cursor: pointer; margin: 0 5px; }
-    .arrow { background: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; position: absolute; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    .prev { left: -20px; } .next { right: -20px; }
-    .cart-btn { position: fixed; bottom: 25px; right: 25px; background: #2d3436; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .cart-box { position: fixed; bottom: 95px; right: 30px; background: white; padding: 20px; width: 300px; display: none; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 100; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      background: #2d3436;
+      color: white;
+      padding: 15px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links button {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 8px 15px;
+      margin-left: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .search-area {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    #searchBox {
+      padding: 12px 20px;
+      width: 400px;
+      border-radius: 25px 0 0 25px;
+      border: none;
+      outline: none;
+    }
+
+    .search-btn {
+      padding: 12px 25px;
+      border-radius: 0 25px 25px 0;
+      border: none;
+      background: #2d3436;
+      color: white;
+      cursor: pointer;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .viewport {
+      width: 100%;
+      overflow: hidden;
+      padding: 20px 5px;
+    }
+
+    .product-track {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      padding: 10px;
+    }
+
+    .product-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card {
+      flex: 0 0 250px;
+      background: white;
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: #e67e22;
+      font-weight: bold;
+    }
+
+    .card button {
+      background: #2d3436;
+      color: white;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 0 5px;
+    }
+
+    .arrow {
+      background: white;
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      position: absolute;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .prev { left: -20px; }
+    .next { right: -20px; }
+
+    .cart-btn {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #2d3436;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .cart-box {
+      position: fixed;
+      bottom: 95px;
+      right: 30px;
+      background: white;
+      padding: 20px;
+      width: 300px;
+      display: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
   </style>
 </head>
+
 <body>
 
 <div class="navbar">
@@ -49,6 +186,7 @@
 </div>
 
 <div class="cart-btn" onclick="toggleCart()">🛒</div>
+
 <div class="cart-box" id="cartBox">
   <h3>My Cart</h3>
   <ul id="cartItems" style="list-style:none; padding:0;"></ul>
@@ -57,88 +195,138 @@
 </div>
 
 <script>
-  let cart = [], products = [];
 
-  async function loadProducts(){
-    try {
-      const r = await fetch("http://localhost:8080/products");
-      products = await r.json();
-      render(products);
-    } catch(e) {
-      products = [{id:1, name:"Vase", price:500},{id:2, name:"Bag", price:1200}];
-      render(products);
+const BASE_URL = "https://handmade-shop-backend-deployment-1.onrender.com";
+
+let cart = [];
+let products = [];
+
+// Load products
+async function loadProducts(){
+  try {
+    const res = await fetch(`${BASE_URL}/products`);
+    products = await res.json();
+    render(products);
+  } catch(e) {
+    alert("Error loading products");
+  }
+}
+
+// Render UI
+function render(data){
+  const track = document.getElementById("productTrack");
+
+  track.innerHTML = data.map(p => `
+    <div class="card">
+      <img src="${BASE_URL}${p.image}">
+      <h4>${p.name}</h4>
+      <p>₹ ${p.price}</p>
+      <button onclick="add(${p.id})">+</button>
+      <button onclick="remove(${p.id})">-</button>
+    </div>
+  `).join('');
+}
+
+// Cart functions
+function add(id){
+  let p = products.find(x => x.id === id);
+  let c = cart.find(x => x.id === id);
+
+  if(c) c.qty++;
+  else cart.push({...p, qty:1});
+
+  updateCart();
+}
+
+function remove(id){
+  let c = cart.find(x => x.id === id);
+  if(!c) return;
+
+  c.qty--;
+  if(c.qty <= 0) cart = cart.filter(x => x.id !== id);
+
+  updateCart();
+}
+
+function updateCart(){
+  let total = 0;
+
+  document.getElementById("cartItems").innerHTML = cart.map(c => {
+    total += c.price * c.qty;
+    return `<li>${c.name} x ${c.qty}</li>`;
+  }).join('');
+
+  document.getElementById("cartTotal").innerText = "Total: ₹ " + total;
+}
+
+// Buy
+async function buyNow(){
+  const username = localStorage.getItem("username");
+
+  if(!username) return alert("Login first");
+  if(cart.length === 0) return alert("Cart empty");
+
+  let total = cart.reduce((s,c)=> s + c.price*c.qty, 0);
+
+  try {
+    const uRes = await fetch(`${BASE_URL}/users/` + username);
+    const user = await uRes.json();
+
+    if(user.balance < total){
+      return alert("Insufficient Balance");
     }
+
+    const oRes = await fetch(`${BASE_URL}/orders/place`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        userId: user.id,
+        username: username,
+        productIds: cart.map(c=>c.id),
+        totalAmount: total,
+        address: "Home"
+      })
+    });
+
+    const order = await oRes.json();
+
+    await fetch(`${BASE_URL}/users/updateBalance/${username}?amount=${total}`, {
+      method: "PUT"
+    });
+
+    alert("Order placed successfully!");
+    window.location.href = `track.html?orderId=${order.id}`;
+
+  } catch(e){
+    alert("Error placing order");
   }
+}
 
-  function render(data){
-    const track = document.getElementById("productTrack");
-    track.innerHTML = data.map(p => `
-      <div class="card">
-        <img src="http://localhost:8080${p.image}">
-        <h4>${p.name}</h4>
-        <p>₹ ${p.price}</p>
-        <button onclick="add(${p.id})">+</button>
-        <button onclick="remove(${p.id})">-</button>
-      </div>`).join('');
-  }
+// UI helpers
+function move(d){
+  document.getElementById("productTrack")
+    .scrollBy({left: d*270, behavior:'smooth'});
+}
 
-  function add(id){
-    let p = products.find(x => x.id === id);
-    let c = cart.find(x => x.id === id);
-    if(c) c.qty++; else cart.push({...p, qty:1});
-    updateCart();
-  }
+function toggleCart(){
+  let b = document.getElementById("cartBox");
+  b.style.display = b.style.display === "block" ? "none" : "block";
+}
 
-  function remove(id){
-    let c = cart.find(x => x.id === id);
-    if(!c) return;
-    c.qty--;
-    if(c.qty <= 0) cart = cart.filter(x => x.id !== id);
-    updateCart();
-  }
+function search(){
+  let v = document.getElementById("searchBox").value.toLowerCase();
+  render(products.filter(p => p.name.toLowerCase().includes(v)));
+}
 
-  function updateCart(){
-    let total = 0;
-    document.getElementById("cartItems").innerHTML = cart.map(c => {
-      total += c.price * c.qty;
-      return `<li>${c.name} x ${c.qty}</li>`;
-    }).join('');
-    document.getElementById("cartTotal").innerText = "Total: ₹ " + total;
-  }
+function logout(){
+  localStorage.clear();
+  window.location = "login.html";
+}
 
-  async function buyNow() {
-    const username = localStorage.getItem("username");
-    if(!username) return alert("Login first");
-    if(cart.length === 0) return alert("Cart empty");
+// Start
+loadProducts();
 
-    let total = cart.reduce((s, c) => s + (c.price * c.qty), 0);
-    try {
-      const uRes = await fetch("http://localhost:8080/users/" + username);
-      const user = await uRes.json();
-      if(user.balance < total) return alert("Insufficient Balance");
-
-      const oRes = await fetch("http://localhost:8080/orders/place", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ userId: user.id, username: localStorage.getItem("username"), productIds: cart.map(c=>c.id), totalAmount: total, address: "Home" })
-      });
-      const order = await oRes.json();
-
-      await fetch(`http://localhost:8080/users/updateBalance/${username}?amount=${total}`, { method: "PUT" });
-
-      alert("Success!");
-      window.location.href = `track.html?orderId=${order.id}`;
-    } catch(e) { alert("Error placing order"); }
-  }
-
-  function move(d) { document.getElementById("productTrack").scrollBy({ left: d * 270, behavior: 'smooth' }); }
-  function toggleCart() { const b = document.getElementById("cartBox"); b.style.display = b.style.display === "block" ? "none" : "block"; }
-  function search() {
-    let v = document.getElementById("searchBox").value.toLowerCase();
-    render(products.filter(p => p.name.toLowerCase().includes(v)));
-  }
-  function logout(){ localStorage.clear(); window.location="login.html"; }
-  loadProducts();
 </script>
+
 </body>
 </html>
