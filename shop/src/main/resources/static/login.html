@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 95%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #ff7e5f;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #eb5e3d;
+        }
+
+        .links {
+            margin-top: 15px;
+        }
+
+        .links button {
+            background: transparent;
+            color: #ff7e5f;
+            border: none;
+            cursor: pointer;
+        }
+
+        .links button:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Handmade Shop</h2>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <div class="links">
+        <button onclick="register()">Register</button>
+        <button onclick="forgot()">Forgot Password</button>
+    </div>
+
+</div>
+
+<script>
+
+    async function login(){
+        let res = await fetch("http://localhost:8080/auth/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: username.value,
+                password: password.value
+            })
+        });
+
+        let text = await res.text();
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            alert(text);   // fallback for plain string errors
+            return;
+        }
+
+        alert(data.message);
+
+        if(data.message === "Login Successful"){
+
+            localStorage.setItem("username", data.username);
+            localStorage.setItem("role", data.role);
+
+            if(data.role==="ADMIN"){
+                window.location.href = "admin/admin-dashboard.html";
+            } else {
+                window.location.href = "home.html";
+            }
+        }
+    }
+
+    async function register(){
+        let res = await fetch("http://localhost:8080/auth/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: username.value,
+                password: password.value
+            })
+        });
+
+        alert(await res.text());
+    }
+
+    async function forgot(){
+
+        let newPass = prompt("Enter new password");
+
+        if(newPass === null || newPass.trim() === ""){
+            alert("Password change cancelled");
+            return;
+        }
+
+        let res = await fetch("http://localhost:8080/auth/forgot", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username: username.value,
+                newPassword: newPass
+            })
+        });
+
+        alert(await res.text());
+    }
+
+</script>
+
+</body>
+</html>

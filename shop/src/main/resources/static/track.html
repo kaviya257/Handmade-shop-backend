@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track My Order</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fcb69f, #ffecd2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .header { text-align: center; margin-bottom: 30px; }
+
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .stepper::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: #eee;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .circle {
+            width: 40px;
+            height: 40px;
+            background: #eee;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #999;
+            border: 3px solid white;
+        }
+
+        .step-label { font-size: 13px; color: #999; font-weight: 600; }
+
+        .completed .circle { background: #00b894; color: white; }
+        .completed .step-label { color: #00b894; }
+        .current .circle { background: #2d3436; color: white; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        .current .step-label { color: #2d3436; }
+
+        .details-card {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #e67e22;
+        }
+
+        .back-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2d3436;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2 id="orderTitle">Tracking Order...</h2>
+        <p id="orderSubtitle" style="color: #666;"></p>
+    </div>
+
+    <div class="stepper">
+        <div id="step1" class="step">
+            <div class="circle">1</div>
+            <div class="step-label">Placed</div>
+        </div>
+        <div id="step2" class="step">
+            <div class="circle">2</div>
+            <div class="step-label">Shipped</div>
+        </div>
+        <div id="step3" class="step">
+            <div class="circle">3</div>
+            <div class="step-label">Delivered</div>
+        </div>
+    </div>
+
+    <div class="details-card">
+        <div id="itemsContainer"></div>
+        <div class="total-row">
+            <span>Total Amount</span>
+            <span id="totalPrice">₹ 0</span>
+        </div>
+    </div>
+
+    <button class="back-btn" onclick="location.href='home.html'">Back to Shopping</button>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('orderId');
+
+    if (!orderId) {
+        document.getElementById("orderTitle").innerText = "No Order ID Found";
+    } else {
+        fetchOrderDetails();
+    }
+
+    function fetchOrderDetails() {
+        fetch(`http://localhost:8080/orders/${orderId}`)
+            .then(r => r.json())
+            .then(order => {
+                console.log("Order Data Received:", order);
+                updateUI(order);
+            })
+            .catch(err => {
+                console.error("Fetch Error:", err);
+                document.getElementById("orderTitle").innerText = "Order Not Found";
+            });
+    }
+
+    function updateUI(order) {
+        document.getElementById("orderTitle").innerText = "Order #ORD-" + order.id;
+
+
+        const price = order.totalAmount || 0;
+        document.getElementById("totalPrice").innerText = "₹ " + price;
+
+        document.getElementById("orderSubtitle").innerText = "Status: " + (order.status || "Processing");
+
+        const status = (order.status || "Pending").toLowerCase();
+        const s1 = document.getElementById("step1");
+        const s2 = document.getElementById("step2");
+        const s3 = document.getElementById("step3");
+
+        // Reset classes
+        [s1, s2, s3].forEach(s => s.className = "step");
+
+        if (status.includes("deliv")) {
+            s1.className = "step completed";
+            s2.className = "step completed";
+            s3.className = "step current";
+            s3.querySelector(".circle").innerText = "✓";
+        } else if (status.includes("ship")) {
+            s1.className = "step completed";
+            s2.className = "step current";
+        } else {
+            s1.className = "step current";
+        }
+
+        const container = document.getElementById("itemsContainer");
+        container.innerHTML = "";
+
+        if (order.productNames && order.productNames.length > 0) {
+            order.productNames.forEach(name => {
+                container.innerHTML += `<div class="item-row"><span>${name}</span><span>Verified</span></div>`;
+            });
+        } else {
+            container.innerHTML = `<div class="item-row"><span>Handmade Items</span><span>Qty: ${order.productIds ? order.productIds.length : 1}</span></div>`;
+        }
+    }
+    function logout(){ localStorage.clear(); window.location="login.html"; }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+        .profile-card {
+            background:white;
+            width:400px;
+            border-radius:20px;
+            padding:30px;
+            text-align:center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .avatar {
+            width:120px;
+            height:120px;
+            border-radius:50%;
+            border: 4px solid #ffecd2;
+            margin-bottom: 15px;
+        }
+        .stats {
+            display:flex;
+            justify-content:space-around;
+            margin: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .btn {
+            margin-top:10px;
+            padding:12px;
+            width:100%;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-recharge { background-color: #2d3436; color: white; }
+        .btn-back { background-color: #dfe6e9; color: #2d3436; }
+        .btn-logout { background-color: #fab1a0; color: #d63031; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+
+<div class="profile-card">
+    <img id="profilePic" class="avatar">
+    <h2 id="displayUsername" style="margin:5px 0;">Loading...</h2>
+    <p id="displayEmail" style="color: #636e72; margin-bottom: 15px;"></p>
+    <h3>Balance: ₹ <span id="balance">0</span></h3>
+
+    <div class="stats">
+        <div>
+            <h3 id="orderCount" style="margin:0;">0</h3>
+            <p style="margin:0; color: #636e72;">Orders</p>
+        </div>
+    </div>
+
+    <button class="btn btn-back" onclick="window.location='home.html'">🏠 Back to Shop</button>
+    <button class="btn btn-recharge" onclick="recharge()">💰 Recharge</button>
+    <button class="btn btn-logout" onclick="logout()">🚪 Logout</button>
+</div>
+
+<script>
+    const username = localStorage.getItem("username");
+    if(!username) window.location="login.html";
+
+    function loadProfile(){
+        fetch("http://localhost:8080/users/" + username)
+            .then(r=>r.json())
+            .then(user=>{
+                document.getElementById("displayUsername").innerText=user.username;
+                document.getElementById("displayEmail").innerText=user.username+"@gmail.com";
+                document.getElementById("balance").innerText=user.balance;
+                document.getElementById("profilePic").src=`https://ui-avatars.com/api/?name=${user.username}&background=random`;
+            });
+
+        fetch("http://localhost:8080/orders/userByName/" + username)
+            .then(r=>r.json())
+            .then(data=> document.getElementById("orderCount").innerText=data.length);
+    }
+
+    function recharge(){
+        let amt = prompt("Enter amount to add:");
+        if(!amt || isNaN(amt)) return;
+
+        fetch(`http://localhost:8080/users/updateBalance/${username}?amount=${-amt}`, { method:"PUT" })
+            .then(()=>loadProfile());
+    }
+
+    function logout(){ localStorage.clear(); window.location="login.html"; }
+    loadProfile();
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+            width: 90%;
+            max-width: 500px;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            outline: none;
+            resize: none;
+            font-size: 14px;
+        }
+
+        textarea:focus {
+            border-color: #ff7675;
+            box-shadow: 0 0 5px #ff7675;
+        }
+
+        button {
+            margin-top: 12px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #ff7675, #d63031);
+            color: white;
+        }
+
+        .back-btn {
+            background: #636e72;
+            color: white;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+        }
+
+        .note {
+            font-size: 12px;
+            color: gray;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>💬 Feedback</h2>
+
+    <textarea id="msg" placeholder="Write your feedback here..."></textarea>
+
+    <button class="submit-btn" onclick="send()">Submit Feedback</button>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+    <div class="note">We value your thoughts ❤️</div>
+</div>
+
+<script>
+    let username = localStorage.getItem("username");
+
+    function send(){
+        let message = document.getElementById("msg").value;
+
+        if(message.trim() === ""){
+            alert("Please write something first!");
+            return;
+        }
+
+        fetch("http://localhost:8080/feedback",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+                username: username,
+                message: message
+            })
+        }).then(()=>{
+            alert("Feedback submitted successfully ✅");
+            document.getElementById("msg").value = "";
+        });
+    }
+
+    function goBack(){
+        window.history.back(window.location="home.html");
+    }
+</script>
+
+</body>
+</html>

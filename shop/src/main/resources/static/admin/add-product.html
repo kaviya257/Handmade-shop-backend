@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Product</title>
+
+    <style>
+        body{
+            font-family:'Segoe UI';
+            background:linear-gradient(135deg,#ffecd2,#fcb69f);
+            margin:0;
+        }
+
+        .nav{
+            background:black;
+            padding:15px;
+            display:flex;
+            justify-content:center;
+            gap:20px;
+        }
+
+        .nav a{color:white;text-decoration:none;}
+
+        .box{
+            background:white;
+            width:350px;
+            margin:80px auto;
+            padding:25px;
+            border-radius:15px;
+            text-align:center;
+        }
+
+        input{
+            width:90%;
+            padding:10px;
+            margin:10px 0;
+        }
+
+        button{
+            width:95%;
+            padding:10px;
+            background:black;
+            color:white;
+            border:none;
+            border-radius:8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="nav">
+    <a href="admin-dashboard.html">Dashboard</a>
+    <a href="add-product.html">Add</a>
+    <a href="manage-products.html">Products</a>
+    <a href="view-orders.html">Orders</a>
+
+</div>
+
+<div class="box">
+
+    <h2>Add Product</h2>
+
+    <input id="name" placeholder="Name">
+    <input id="price" placeholder="Price">
+    <input id="image" placeholder="Image URL">
+
+    <button onclick="add()">Add</button>
+
+</div>
+
+<script>
+
+    function add(){
+        fetch("http://localhost:8080/admin/product",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+                name:name.value,
+                price:price.value,
+                image:image.value
+            })
+        }).then(()=>{
+            alert("Added");
+            name.value="";
+            price.value="";
+            image.value="";
+        });
+    }
+    function logout(){ localStorage.clear(); window.location="/login.html"; }
+
+</script>
+
+</body>
+</html>

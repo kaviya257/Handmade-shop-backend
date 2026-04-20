@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            margin:0;
+            font-family:'Segoe UI';
+            background: linear-gradient(135deg,#ffecd2,#fcb69f);
+        }
+
+        .nav {
+            background:rgba(0,0,0,0.9);
+            padding:15px;
+            display:flex;
+            justify-content:center;
+            gap:20px;
+            align-items:center;
+        }
+
+        .nav a {
+            color:white;
+            text-decoration:none;
+        }
+
+        button {
+            background:red;
+            color:white;
+            border:none;
+            padding:8px 12px;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+        .grid {
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+            gap:20px;
+            padding:20px;
+        }
+
+        .card {
+            background:white;
+            width:220px;
+            border-radius:15px;
+            padding:15px;
+            text-align:center;
+        }
+
+        img {
+            width:100%;
+            height:150px;
+            border-radius:10px;
+            object-fit:cover;
+        }
+
+        .qty button {
+            padding:5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="nav">
+    <a href="admin-dashboard.html">Dashboard</a>
+    <a href="add-product.html">Add</a>
+    <a href="manage-products.html">Products</a>
+    <a href="view-orders.html">Orders</a>
+
+    <button onclick="logout()">Logout</button>
+</div>
+
+<h2 style="text-align:center;">PRODUCT DASHBOARD</h2>
+
+<div id="products" class="grid"></div>
+
+<script>
+
+    const role = localStorage.getItem("role");
+    if(!role || role !== "ADMIN"){
+        alert("Access Denied");
+        window.location="../login.html";
+    }
+
+    function logout(){
+        localStorage.clear();
+        window.location="../login.html";
+    }
+
+    function loadProducts(){
+        fetch("http://localhost:8080/admin/products")
+            .then(r=>r.json())
+            .then(data=>{
+                let html="";
+
+                data.forEach(p=>{
+                    html+=`
+<div class="card">
+
+<img src="http://localhost:8080${p.image}">
+
+<h3>${p.name}</h3>
+<p>₹${p.price}</p>
+
+<div class="qty">
+<button onclick="dec(${p.id})">-</button>
+<span id="qty-${p.id}">1</span>
+<button onclick="inc(${p.id})">+</button>
+</div>
+
+</div>`;
+                });
+
+                document.getElementById("products").innerHTML=html;
+            });
+    }
+
+    function inc(id){
+        document.getElementById("qty-"+id).innerText++;
+    }
+
+    function dec(id){
+        let el=document.getElementById("qty-"+id);
+        if(el.innerText>1) el.innerText--;
+    }
+
+    loadProducts();
+
+</script>
+
+</body>
+</html>
